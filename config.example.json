@@ -1,0 +1,8 @@
+{
+  "auth": {
+    "type": "plaintext_password",
+    "password": "my_awesome_password"
+  },
+  "server_ip": "my.amazing.website",
+  "server_port": 4200
+}
