@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-function build(){
+function build(script){
   var config = require('./config.json'),
       io = require('socket.io-client'),
       socket = io.connect('ws://' + config.server_ip + ":" + config.server_port),
@@ -16,7 +16,11 @@ function build(){
 
   socket.on("key:success", function(){
     console.log("Authentication success! Running build scripts...");
-    socket.emit("build:run");
+    if(script){
+      socket.emit("script:run", script);
+    }else{
+      socket.emit("build:run");
+    }
   });
 
   socket.on("stdout", function(data){
@@ -47,10 +51,14 @@ if(process.argv[2]){
       console.log(__dirname + "/config.json");
       break;
     case 'build':
-      build();
+      if(process.argv[3]){
+        build(process.argv[3]);
+      }else{
+        build();
+      }
       break;
     default:
-      console.log("Command not recognized. Available commands are: config, build");
+      console.log("Command not recognized. Available commands are: config, build [script]");
       break;
   }
 }else{
